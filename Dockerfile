@@ -1,4 +1,4 @@
-FROM debian:buster-slim
+FROM ubuntu:20.04
 
 ENV GITHUB_PAT ""
 ENV GITHUB_OWNER ""
@@ -6,14 +6,18 @@ ENV GITHUB_REPOSITORY ""
 ENV RUNNER_WORKDIR "_work"
 ENV RUNNER_LABELS ""
 
-RUN apt-get update \
-    && apt-get install -y \
+RUN apt update \
+    && DEBIAN_FRONTEND="noninteractive" apt install -y \
         curl \
         sudo \
         git \
         jq \
         iputils-ping \
-    && apt-get clean \
+        unzip \
+        tzdata \
+    && curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash - \
+    && apt install nodejs -y \
+    && apt clean \
     && rm -rf /var/lib/apt/lists/* \
     && useradd -m github \
     && usermod -aG sudo github \
